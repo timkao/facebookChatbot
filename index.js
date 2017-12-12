@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const port = process.env.PORT || 1337;
+if (process.env.NODE_ENV !== 'production') require('./secrets');
+
 
 const app = express();
 
@@ -20,7 +22,9 @@ app.post('/webhook', (req, res) => {
        // Gets the message. entry.messaging is an array, but
        // will only ever contain one message, so we get index 0
        let webhookEvent = entry.messaging[0];
+       console.log('-------------');
        console.log(webhookEvent);
+
      });
 
      // Returns a '200 OK' response to all requests
@@ -36,7 +40,7 @@ app.post('/webhook', (req, res) => {
 app.get('/webhook', (req, res) => {
 
     // Your verify token. Should be a random string.
-    let VERIFY_TOKEN = "timTestFacebookChatBot";
+    let VERIFY_TOKEN = process.env.verify_token;
 
     // Parse the query params
     let mode = req.query['hub.mode'];
