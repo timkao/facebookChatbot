@@ -1,5 +1,3 @@
-import { request } from 'http';
-
 const router = require('express').Router();
 const axios = require('axios');
 const PAGE_ACCESS_TOKEN = process.env.page_access_token;
