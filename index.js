@@ -4,7 +4,6 @@ const port = process.env.PORT || 1337;
 const webhook = require('./server/api/webhook');
 
 if (process.env.NODE_ENV !== 'production') require('./secrets');
-const PAGE_ACCESS_TOKEN = process.env.page_access_token;
 
 
 const app = express();

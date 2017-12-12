@@ -1,4 +1,10 @@
+import { request } from 'http';
+
 const router = require('express').Router();
+const axios = require('axios');
+const PAGE_ACCESS_TOKEN = process.env.page_access_token;
+
+
 module.exports = router;
 
 // Creates the endpoint for our webhook
@@ -15,11 +21,17 @@ router.post('/', (req, res) => {
       // Gets the message. entry.messaging is an array, but
       // will only ever contain one message, so we get index 0
       let webhookEvent = entry.messaging[0];
-      console.log('-------------XXXXXXXXXXXXX');
+      console.log('-------------OOOOOOOOOOOOO');
       console.log(webhookEvent);
 
       let sender_psid = webhookEvent.sender.id;
       console.log('Sender PSID: ' + sender_psid);
+
+      if (webhookEvent.message) {
+        handleMessage(sender_psid, webhookEvent.message);
+      } else if (webhookEvent.postback) {
+        handlePostback(sender_psid, webhookEvent.message);
+      }
 
     });
 
@@ -66,7 +78,18 @@ router.get('/', (req, res) => {
 
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
+  let response;
 
+  if (received_message.text) {
+
+    // Create the payload for a basic text message
+    response = {
+      "text": `You sent the message: "${received_message.text}". Now send me an image!`
+    }
+  }
+
+  // Sends the response message
+  callSendAPI(sender_psid, response);
 }
 
 // Handles messaging_postbacks events
@@ -76,5 +99,21 @@ function handlePostback(sender_psid, received_postback) {
 
 // Sends response messages via the Send API
 function callSendAPI(sender_psid, response) {
+  let request_body = {
+    "recipient":{
+      "id": sender_psid
+    },
+    "message": response
+  }
+
+  axios.post(`https://graph.facebook.com/v2.6/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, request_body)
+  .then( result => result.data)
+  .then(() => {
+    console.log('message sent!');
+  })
+  .catch(err => {
+    console.log(err);
+  })
 
 }
+
