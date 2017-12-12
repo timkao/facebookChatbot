@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 
 // Creates the endpoint for our webhook
-router.post('/webhook', (req, res) => {
+router.post('/', (req, res) => {
 
      let body = req.body;
 
@@ -15,7 +15,7 @@ router.post('/webhook', (req, res) => {
          // Gets the message. entry.messaging is an array, but
          // will only ever contain one message, so we get index 0
          let webhookEvent = entry.messaging[0];
-         console.log('-------------');
+         console.log('-------------XXXXXXXXXXXXX');
          console.log(webhookEvent);
 
        });
@@ -30,7 +30,7 @@ router.post('/webhook', (req, res) => {
    });
 
    // Adds support for GET requests to our webhook
-  router.get('/webhook', (req, res) => {
+  router.get('/', (req, res) => {
 
       // Your verify token. Should be a random string.
       let VERIFY_TOKEN = process.env.verify_token;
