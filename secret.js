@@ -1,1 +1,2 @@
 process.env.verify_token = 'timTestFacebookChatBot';
+process.env.page_access_token = 'EAACYZC8YRbCQBAL7ErccZBJBac8BI4jybIEhnoKouO1piLCKLHWEcuXZAVN4EKoVBgOV4J0rT0kRObGtaLEMqQtkRcumCnOb8yMiLTIVwqoCYpFi6WUVqozZAqrOe8BdMSCaZB8Hr4DXeujWjb6qW1qyr2uk0T5KddjkJuirFYgZDZD'
