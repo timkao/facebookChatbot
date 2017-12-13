@@ -20,7 +20,7 @@ router.post('/', (req, res) => {
       // Gets the message. entry.messaging is an array, but
       // will only ever contain one message, so we get index 0
       let webhookEvent = entry.messaging[0];
-      console.log('-------------1111111111111111');
+      console.log('-------------2222222222222222');
       console.log(webhookEvent);
 
       let sender_psid = webhookEvent.sender.id;
@@ -85,7 +85,35 @@ function handleMessage(sender_psid, received_message) {
     response = {
       "text": `You sent the message: "${received_message.text}". Now send me an image!`
     }
-  }
+  } else if (received_message.attachments) {
+      // Gets the URL of the message attachment
+      let attachment_url = received_message.attachments[0].payload.url;
+      response = {
+        "attachment": {
+          "type": "template",
+          "payload": {
+            "template_type": "generic",
+            "elements": [{
+              "title": "Is this the right picture?",
+              "subtitle": "Tap a button to answer.",
+              "image_url": attachment_url,
+              "buttons": [
+                {
+                  "type": "postback",
+                  "title": "Yes!",
+                  "payload": "yes",
+                },
+                {
+                  "type": "postback",
+                  "title": "No!",
+                  "payload": "no",
+                }
+              ],
+            }]
+          }
+        }
+      }
+    }
 
   // Sends the response message
   callSendAPI(sender_psid, response);
@@ -105,27 +133,14 @@ function callSendAPI(sender_psid, response) {
     "message": response
   }
 
-  // axios.post(`https://graph.facebook.com/v2.6/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, request_body)
-  // .then( result => result.data)
-  // .then(() => {
-  //   console.log('message sent!');
-  // })
-  // .catch(err => {
-  //   console.log(err);
-  // })
-
-  request({
-    "uri": "https://graph.facebook.com/v2.6/me/messages",
-    "qs": { "access_token": PAGE_ACCESS_TOKEN },
-    "method": "POST",
-    "json": request_body
-  }, (err, res, body) => {
-    if (!err) {
-      console.log('message sent!')
-    } else {
-      console.error("Unable to send message:" + err);
-    }
-  });
+  axios.post(`https://graph.facebook.com/v2.6/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, request_body)
+  .then( result => result.data)
+  .then(() => {
+    console.log('message sent!');
+  })
+  .catch(err => {
+    console.log(err);
+  })
 
 }
 
