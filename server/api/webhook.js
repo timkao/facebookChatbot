@@ -29,7 +29,7 @@ router.post('/', (req, res) => {
       if (webhookEvent.message) {
         handleMessage(sender_psid, webhookEvent.message);
       } else if (webhookEvent.postback) {
-        handlePostback(sender_psid, webhookEvent.message);
+        handlePostback(sender_psid, webhookEvent.postback);
       }
 
     });
