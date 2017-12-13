@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const axios = require('axios');
+const request = require('request');
 const PAGE_ACCESS_TOKEN = process.env.page_access_token;
 
 
@@ -19,7 +20,7 @@ router.post('/', (req, res) => {
       // Gets the message. entry.messaging is an array, but
       // will only ever contain one message, so we get index 0
       let webhookEvent = entry.messaging[0];
-      console.log('-------------OOOOOOOOOOOOO');
+      console.log('-------------1111111111111111');
       console.log(webhookEvent);
 
       let sender_psid = webhookEvent.sender.id;
@@ -104,14 +105,27 @@ function callSendAPI(sender_psid, response) {
     "message": response
   }
 
-  axios.post(`https://graph.facebook.com/v2.6/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, request_body)
-  .then( result => result.data)
-  .then(() => {
-    console.log('message sent!');
-  })
-  .catch(err => {
-    console.log(err);
-  })
+  // axios.post(`https://graph.facebook.com/v2.6/me/messages?access_token=${PAGE_ACCESS_TOKEN}`, request_body)
+  // .then( result => result.data)
+  // .then(() => {
+  //   console.log('message sent!');
+  // })
+  // .catch(err => {
+  //   console.log(err);
+  // })
+
+  request({
+    "uri": "https://graph.facebook.com/v2.6/me/messages",
+    "qs": { "access_token": PAGE_ACCESS_TOKEN },
+    "method": "POST",
+    "json": request_body
+  }, (err, res, body) => {
+    if (!err) {
+      console.log('message sent!')
+    } else {
+      console.error("Unable to send message:" + err);
+    }
+  });
 
 }
 
